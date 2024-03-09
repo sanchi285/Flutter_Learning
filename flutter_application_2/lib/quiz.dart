@@ -33,7 +33,12 @@ class Quiz extends StatefulWidget{
       });
   }
 
-  
+  void Restart(){
+     setState(() {
+        selectedAnswer = [];
+        activeScreen = 'start-screen';
+      });
+  }
 
   @override
   Widget build(context) {
@@ -44,7 +49,10 @@ class Quiz extends StatefulWidget{
       screenWiget =   QuestionScreen(onSelectAnswer: chooseAnswer);
     }
     else if(activeScreen=='result-screen'){
-      screenWiget = ResultsScreen(chooseAnswer: selectedAnswer);
+      screenWiget = ResultsScreen(chooseAnswer: selectedAnswer, restartQuiz: Restart,);
+    }
+    else if(activeScreen=='start-screen'){
+      screenWiget = StartScreen(switchScreen);
     }
 
     return MaterialApp(

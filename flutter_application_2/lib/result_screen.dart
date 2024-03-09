@@ -5,8 +5,11 @@ import 'package:flutter_application_2/questions_summary.dart';
 
 class ResultsScreen extends StatelessWidget{
   
- const ResultsScreen({super.key, required this.chooseAnswer});
+ const ResultsScreen({super.key, required this.chooseAnswer, required this.restartQuiz});
+ final void Function() restartQuiz;
  final List<String> chooseAnswer; 
+ 
+
  List<Map<String, Object>> getSummaryData(){
   final List<Map<String, Object>> summary = [];
   for(var i=0;i<chooseAnswer.length;i++){
@@ -40,7 +43,14 @@ class ResultsScreen extends StatelessWidget{
             const SizedBox(height: 30,),
             QuestionsSummary(getSummaryData()),
             const SizedBox(height: 30,),
-            TextButton(onPressed: (){}, child: Text('restart quiz'))
+            TextButton.icon(
+              onPressed: restartQuiz, 
+              label: Text('restart quiz'),
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.white
+              ),
+              icon: const Icon(Icons.refresh),
+              )
           ],
           ),
       )
