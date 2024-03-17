@@ -7,7 +7,6 @@ class Expenses extends StatefulWidget{
   const Expenses({super.key});
   @override
   State<Expenses> createState(){
-    
     return _ExpensesState();
   }
 
@@ -26,13 +25,20 @@ class _ExpensesState extends State<Expenses>{
     category: Category.leisure)
   ];
 
-
+ void _addExpense(Expense expense){
+    setState(() {
+      registeredExpenses.add(expense);
+    });
+  }
+  
   void _openAddExpenseOverlay(){
       showModalBottomSheet(context: context, builder: (ctx){
-        return NewExpense();
+        return NewExpense(onAddExpense: _addExpense);
         }
         );
   }
+
+ 
 
   @override
   Widget build(BuildContext context) {

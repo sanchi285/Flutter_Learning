@@ -1,10 +1,14 @@
-import 'dart:ffi';
+//import 'dart:ffi';
+//import 'dart:html';
 
 import 'package:expense_tracker/model/Expense.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class NewExpense extends StatefulWidget{
+
+  const NewExpense({super.key, required this.onAddExpense});
+  final void Function(Expense expense) onAddExpense;
   @override
   State<NewExpense> createState() {
     
@@ -33,7 +37,7 @@ class _NewExpenseState extends State<NewExpense>{
       _selectedDate =  pickedDate;
     });
   }
-
+  
   void _submitExpenseData(){
     final enteredAmount = double.tryParse(_amountController.text);
     final amountIsInvalid =  enteredAmount==null || enteredAmount <= 0; 
@@ -52,6 +56,10 @@ class _NewExpenseState extends State<NewExpense>{
       ));
       return;
     }
+    
+    widget.onAddExpense(Expense(title: _titleController.text, 
+    amount: enteredAmount, date: _selectedDate!, category: _selectedCategory));
+    
   }
 
   @override
@@ -120,7 +128,7 @@ class _NewExpenseState extends State<NewExpense>{
             ElevatedButton(onPressed: (){
               print(_titleController.text);
               _submitExpenseData();
-             // print(_amountController.text);
+              print(_amountController.text);
             }, 
             child: const Text('Save expense'))
           ],)
