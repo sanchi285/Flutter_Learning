@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:expense_tracker/model/Expense.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -16,6 +18,7 @@ class _NewExpenseState extends State<NewExpense>{
   final _titleController =  TextEditingController();
   final _amountController =  TextEditingController();
   DateTime? _selectedDate;
+  Category _selectedCategory = Category.leisure;
   void _presentDatePicker() async {
 
     final now = DateTime.now();
@@ -29,6 +32,26 @@ class _NewExpenseState extends State<NewExpense>{
     setState(() {
       _selectedDate =  pickedDate;
     });
+  }
+
+  void _submitExpenseData(){
+    final enteredAmount = double.tryParse(_amountController.text);
+    final amountIsInvalid =  enteredAmount==null || enteredAmount <= 0; 
+    if(_titleController.text.trim().isEmpty 
+    || amountIsInvalid
+    || _selectedDate==null
+    ){
+      //show error
+      showDialog(context: context, builder: (ctx)=>AlertDialog(
+          title: const Text('Invalid input'), 
+          content: const Text('Please make sure you entered the right input'),  
+          actions: [
+            TextButton(onPressed: (){Navigator.pop(ctx);}, 
+            child: const Text('Close'))
+          ],     
+      ));
+      return;
+    }
   }
 
   @override
@@ -46,6 +69,7 @@ class _NewExpenseState extends State<NewExpense>{
       padding: const EdgeInsets.all(16),
       child: Column(
         children: [
+         
           TextField(
            controller: _titleController, 
            maxLength: 50,
@@ -55,7 +79,7 @@ class _NewExpenseState extends State<NewExpense>{
           ),
           Row(
             
-            children: [Expanded(child: TextField(
+           children: [Expanded(child: TextField(
            controller: _amountController, 
            keyboardType: TextInputType.number,
            maxLength: 50,
@@ -65,6 +89,7 @@ class _NewExpenseState extends State<NewExpense>{
            ),
           )),
           const SizedBox(width: 16,),
+          
           Expanded(child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
@@ -77,9 +102,24 @@ class _NewExpenseState extends State<NewExpense>{
           ]),
           
           Row(children: [
+             DropdownButton(
+            value: _selectedCategory ,
+            items: Category.values.map(
+            (category) => DropdownMenuItem    
+            ( value: category,
+              child: Text(category.name.toString(),),),).toList(), 
+            onChanged: (value){
+              
+              if(value==null) return;
+              setState(() {
+                _selectedCategory = value;  
+              });
+              
+            }),
             TextButton(onPressed: (){Navigator.pop(context);}, child: const Text("Cancel")),
             ElevatedButton(onPressed: (){
               print(_titleController.text);
+              _submitExpenseData();
              // print(_amountController.text);
             }, 
             child: const Text('Save expense'))
