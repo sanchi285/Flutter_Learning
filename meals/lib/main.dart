@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:meals/categories.dart';
 
+
 final theme = ThemeData(
   useMaterial3: true,
   colorScheme: ColorScheme.fromSeed(
